@@ -81,7 +81,7 @@ namespace TicketService.Src.Controllers
         public async Task<IActionResult> UpdateTicket(string id, [FromBody] UpdateTicketDto updateTicketDto)
         {
             if (id == null) return BadRequest(new { message = "Ticket ID is required." });
-
+            
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try

@@ -72,7 +72,7 @@ namespace TicketService.Src.Repositories
                 existingTicket.TicketType = ticket.TicketType;
             }
 
-            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus))
+            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus) && ticket.TicketStatus != "caducado")
             {
                 existingTicket.TicketStatus = ticket.TicketStatus;
             }
