@@ -1,4 +1,6 @@
 using TicketService.Src.Data;
+using TicketService.Src.interfaces;
+using TicketService.Src.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +8,7 @@ builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
 
 builder.Services.AddScoped<MongoDataContext>();
+builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
