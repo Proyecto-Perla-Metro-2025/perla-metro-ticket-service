@@ -13,12 +13,12 @@ namespace TicketService.Src.Models
 
         [BsonElement("PassengerId")]
         [BsonRepresentation(BsonType.String)]
-        [Required]  
+        [Required]
         public string PassengerId { get; set; } = null!;
 
         [BsonElement("CreatedAt")]
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(-4);
 
         [BsonElement("TicketType")]
         [Required]
@@ -32,6 +32,7 @@ namespace TicketService.Src.Models
 
         [BsonElement("Amount")]
         [Required]
+        [Range(0.0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public double Amount { get; set; } = 0.0;
 
         [BsonElement("IsDeleted")]
