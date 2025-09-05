@@ -9,7 +9,7 @@ namespace TicketService.Src.Mappers
 {
     public static class TicketMapper
     {
-        public static TicketDto ToDto(this Ticket ticket)
+        public static TicketDto? ToDto(this Ticket? ticket)
         {
             if (ticket == null) return null;
 

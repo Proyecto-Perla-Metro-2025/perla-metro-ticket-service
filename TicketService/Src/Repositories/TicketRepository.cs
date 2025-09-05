@@ -20,16 +20,36 @@ namespace TicketService.Src.Repositories
         {
             _context = context;
         }
-        public Task<TicketDto> GetTicketById(int id)
+        public Task<TicketDto?> GetTicketById(string id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var ticket = _context.Tickets.FindAsync(t => t.Id == id).Result.FirstOrDefault();
+
+                if (ticket == null)
+                {
+                    throw new Exception("Ticket not found");
+                }
+
+                return Task.FromResult(ticket.ToDto());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task<ICollection<TicketDto>> GetTickets()
+        public async Task<ICollection<TicketDto?>> GetTickets()
         {
             try
             {
                 var tickets = _context.Tickets.FindAsync(ticket => true).Result.ToList();
+                
+                if (tickets == null || tickets.Count == 0)
+                {
+                    throw new Exception("No tickets found");
+                }
+
                 return await Task.FromResult(tickets.Select(t => t.ToDto()).ToList());
             }
             catch (Exception ex)

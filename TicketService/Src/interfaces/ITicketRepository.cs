@@ -9,7 +9,7 @@ namespace TicketService.Src.interfaces
 {
     public interface ITicketRepository
     {
-        public Task<ICollection<TicketDto>> GetTickets();
-        public Task<TicketDto> GetTicketById(int id);
+        public Task<ICollection<TicketDto?>> GetTickets();
+        public Task<TicketDto?> GetTicketById(string id);
     }
 }

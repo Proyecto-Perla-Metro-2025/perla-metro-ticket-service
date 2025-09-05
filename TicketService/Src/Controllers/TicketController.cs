@@ -27,5 +27,19 @@ namespace TicketService.Src.Controllers
                 return StatusCode(500, new { message = ex.Message });
             }
         }
+
+        [HttpGet("{id:string}")]
+        public IActionResult GetTicketById(string id)
+        {
+            try
+            {
+                var ticket = _ticketRepository.GetTicketById(id).Result;
+                return Ok(ticket);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 }
