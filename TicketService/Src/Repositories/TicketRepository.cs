@@ -20,6 +20,27 @@ namespace TicketService.Src.Repositories
         {
             _context = context;
         }
+
+        public async Task<TicketDto?> CreateTicket(CreateTicketDto ticket)
+        {
+            try
+            {
+                var newTicket = ticket.toModel();
+
+                if (_context.Tickets.FindAsync(t => t.PassengerId == newTicket.PassengerId && t.CreatedAt == newTicket.CreatedAt).Result.Any())
+                {
+                    throw new Exception("Ticket already exists");
+                }
+
+                await _context.Tickets.InsertOneAsync(newTicket);
+                return newTicket.ToDto();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public Task<TicketDtoById?> GetTicketById(string id)
         {
             try

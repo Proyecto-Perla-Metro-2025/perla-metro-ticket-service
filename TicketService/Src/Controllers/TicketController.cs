@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using TicketService.Src.DTOs;
 using TicketService.Src.interfaces;
 
 namespace TicketService.Src.Controllers
@@ -15,11 +16,11 @@ namespace TicketService.Src.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetTickets()
+        public async Task<IActionResult> GetTickets()
         {
             try
             {
-                var tickets = _ticketRepository.GetTickets().Result;
+                var tickets = await _ticketRepository.GetTickets();
                 return Ok(tickets);
             }
             catch (Exception ex)
@@ -29,11 +30,25 @@ namespace TicketService.Src.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTicketById(string id)
+        public async Task<IActionResult> GetTicketById(string id)
         {
             try
             {
-                var ticket = _ticketRepository.GetTicketById(id).Result;
+                var ticket = await _ticketRepository.GetTicketById(id);
+                return Ok(ticket);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto createTicketDto)
+        {
+            try
+            {
+                var ticket = await _ticketRepository.CreateTicket(createTicketDto);
                 return Ok(ticket);
             }
             catch (Exception ex)
