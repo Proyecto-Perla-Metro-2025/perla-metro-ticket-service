@@ -23,60 +23,37 @@ namespace TicketService.Src.Repositories
 
         public async Task<TicketDto?> CreateTicket(CreateTicketDto ticket)
         {
-            try
-            {
-                var newTicket = ticket.toModel();
+            var newTicket = ticket.toModel();
 
-                if (_context.Tickets.FindAsync(t => t.PassengerId == newTicket.PassengerId && t.CreatedAt == newTicket.CreatedAt).Result.Any())
-                {
-                    throw new Exception("Ticket already exists");
-                }
+            var existingTicket = await _context.Tickets
+                .Find(t => t.PassengerId == newTicket.PassengerId && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
 
-                await _context.Tickets.InsertOneAsync(newTicket);
-                return newTicket.ToDto();
-            }
-            catch (Exception ex)
+            if (existingTicket != null)
             {
-                throw new Exception(ex.Message);
+                throw new InvalidOperationException("Passenger already has a ticket for this date.");
             }
+
+            await _context.Tickets.InsertOneAsync(newTicket);
+            return newTicket.ToDto();
         }
 
-        public Task<TicketDtoById?> GetTicketById(string id)
+        public async Task<TicketDtoById?> GetTicketById(string id)
         {
-            try
-            {
-                var ticket = _context.Tickets.FindAsync(t => t.Id == id).Result.FirstOrDefault();
+            var ticket = await _context.Tickets
+                .Find(t => t.Id == id && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
 
-                if (ticket == null)
-                {
-                    throw new Exception("Ticket not found");
-                }
-
-                return Task.FromResult(ticket.toDtoById());
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return ticket?.toDtoById();
         }
 
-        public async Task<ICollection<TicketDto?>> GetTickets()
+        public async Task<ICollection<TicketDto?>> GetTickets() 
         {
-            try
-            {
-                var tickets = _context.Tickets.FindAsync(ticket => true).Result.ToList();
-                
-                if (tickets == null || tickets.Count == 0)
-                {
-                    throw new Exception("No tickets found");
-                }
+            var tickets = await _context.Tickets
+                .Find(t => t.IsDeleted == false)
+                .ToListAsync();
 
-                return await Task.FromResult(tickets.Select(t => t.ToDto()).ToList());
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return tickets.Select(t => t.ToDto()).ToList();
         }
     }
 }

@@ -23,37 +23,57 @@ namespace TicketService.Src.Controllers
                 var tickets = await _ticketRepository.GetTickets();
                 return Ok(tickets);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = ex.Message });
+                return StatusCode(500, new { message = "An error occurred while retrieving tickets." });
             }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTicketById(string id)
         {
+            if (id == null) return BadRequest(new { message = "Ticket ID is required." });
+            
             try
             {
                 var ticket = await _ticketRepository.GetTicketById(id);
+                
+                if (ticket == null)
+                {
+                    return NotFound(new { message = "Ticket not found." });
+                }
+
                 return Ok(ticket);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = ex.Message });
+                return StatusCode(500, new { message = "An error occurred while retrieving the ticket." });
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto createTicketDto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
             try
             {
                 var ticket = await _ticketRepository.CreateTicket(createTicketDto);
+
+                if (ticket == null)
+                {
+                    return BadRequest(new { message = "Failed to create ticket." });
+                }
+
                 return Ok(ticket);
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                return StatusCode(500, new { message = ex.Message });
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while creating the ticket." });
             }
         }
     }
