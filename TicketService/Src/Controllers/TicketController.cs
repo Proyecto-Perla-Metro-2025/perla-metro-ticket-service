@@ -33,11 +33,11 @@ namespace TicketService.Src.Controllers
         public async Task<IActionResult> GetTicketById(string id)
         {
             if (id == null) return BadRequest(new { message = "Ticket ID is required." });
-            
+
             try
             {
                 var ticket = await _ticketRepository.GetTicketById(id);
-                
+
                 if (ticket == null)
                 {
                     return NotFound(new { message = "Ticket not found." });
@@ -74,6 +74,34 @@ namespace TicketService.Src.Controllers
             catch (Exception)
             {
                 return StatusCode(500, new { message = "An error occurred while creating the ticket." });
+            }
+        }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTicket(string id, [FromBody] UpdateTicketDto updateTicketDto)
+        {
+            if (id == null) return BadRequest(new { message = "Ticket ID is required." });
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            try
+            {
+                var updatedTicket = await _ticketRepository.UpdateTicket(id, updateTicketDto);
+
+                if (updatedTicket == null)
+                {
+                    return NotFound(new { message = "Ticket not found." });
+                }
+
+                return Ok(updatedTicket);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while updating the ticket." });
             }
         }
     }

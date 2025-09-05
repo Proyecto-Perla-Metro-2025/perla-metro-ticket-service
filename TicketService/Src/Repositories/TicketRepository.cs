@@ -55,5 +55,35 @@ namespace TicketService.Src.Repositories
 
             return tickets.Select(t => t.ToDto()).ToList();
         }
+
+        public async Task<TicketDto?> UpdateTicket(string id, UpdateTicketDto ticket)
+        {
+            var existingTicket = await _context.Tickets
+                .Find(t => t.Id == id && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (existingTicket == null)
+            {
+                throw new KeyNotFoundException("Ticket not found.");
+            }
+            
+            if (!string.IsNullOrWhiteSpace(ticket.TicketType))
+            {
+                existingTicket.TicketType = ticket.TicketType;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus))
+            {
+                existingTicket.TicketStatus = ticket.TicketStatus;
+            }
+
+            if (ticket.Amount.HasValue)
+            {
+                existingTicket.Amount = ticket.Amount.Value;
+            }
+            
+            await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
+            return existingTicket.ToDto();
+        }
     }
 }
