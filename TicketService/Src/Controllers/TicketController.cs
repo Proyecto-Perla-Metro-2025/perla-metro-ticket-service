@@ -28,7 +28,7 @@ namespace TicketService.Src.Controllers
             }
         }
 
-        [HttpGet("{id:string}")]
+        [HttpGet("{id}")]
         public IActionResult GetTicketById(string id)
         {
             try

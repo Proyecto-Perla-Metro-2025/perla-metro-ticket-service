@@ -23,5 +23,19 @@ namespace TicketService.Src.Mappers
                 Amount = ticket.Amount
             };
         }
+
+        public static TicketDtoById? toDtoById(this Ticket? ticket)
+        {
+            if (ticket == null) return null;
+
+            return new TicketDtoById
+            {
+                Id = ticket.Id,
+                PassengerId = ticket.PassengerId,
+                CreatedAt = ticket.CreatedAt,
+                TicketType = ticket.TicketType,
+                Amount = ticket.Amount
+            };
+        }
     }
 }

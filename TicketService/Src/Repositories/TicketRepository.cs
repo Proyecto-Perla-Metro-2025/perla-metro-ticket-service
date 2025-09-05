@@ -20,7 +20,7 @@ namespace TicketService.Src.Repositories
         {
             _context = context;
         }
-        public Task<TicketDto?> GetTicketById(string id)
+        public Task<TicketDtoById?> GetTicketById(string id)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace TicketService.Src.Repositories
                     throw new Exception("Ticket not found");
                 }
 
-                return Task.FromResult(ticket.ToDto());
+                return Task.FromResult(ticket.toDtoById());
             }
             catch (Exception ex)
             {
