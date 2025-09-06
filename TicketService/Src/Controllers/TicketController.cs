@@ -76,12 +76,12 @@ namespace TicketService.Src.Controllers
                 return StatusCode(500, new { message = "An error occurred while creating the ticket." });
             }
         }
-        
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTicket(string id, [FromBody] UpdateTicketDto updateTicketDto)
         {
             if (id == null) return BadRequest(new { message = "Ticket ID is required." });
-            
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             try
@@ -102,6 +102,32 @@ namespace TicketService.Src.Controllers
             catch (Exception)
             {
                 return StatusCode(500, new { message = "An error occurred while updating the ticket." });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTicket(string id)
+        {
+            if (id == null) return BadRequest(new { message = "Ticket ID is required." });
+
+            try
+            {
+                var result = await _ticketRepository.DeleteTicket(id);
+
+                if (!result)
+                {
+                    return NotFound(new { message = "Ticket not found." });
+                }
+
+                return Ok(new { message = "Ticket deleted successfully." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, new { message = "An error occurred while deleting the ticket." });
             }
         }
     }

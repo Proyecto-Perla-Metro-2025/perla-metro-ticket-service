@@ -13,7 +13,6 @@ namespace TicketService.Src.Repositories
 {
     public class TicketRepository : ITicketRepository
     {
-
         private readonly MongoDataContext _context;
 
         public TicketRepository(MongoDataContext context)
@@ -36,6 +35,24 @@ namespace TicketService.Src.Repositories
 
             await _context.Tickets.InsertOneAsync(newTicket);
             return newTicket.ToDto();
+        }
+
+        public async Task<bool> DeleteTicket(string id)
+        {
+            var existingTicket = await _context.Tickets
+                .Find(t => t.Id == id && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (existingTicket == null)
+            {
+                throw new KeyNotFoundException("Ticket not found.");
+            }
+            else
+            {
+                existingTicket.IsDeleted = true;
+                await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
+                return true;
+            }
         }
 
         public async Task<TicketDtoById?> GetTicketById(string id)
