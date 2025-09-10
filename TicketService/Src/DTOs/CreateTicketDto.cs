@@ -15,10 +15,6 @@ namespace TicketService.Src.DTOs
         [Required]
         public string PassengerId { get; set; } = null!;
 
-        [BsonElement("CreatedAt")]
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(-4);
-
         [BsonElement("TicketType")]
         [Required]
         [RegularExpression("^(ida|vuelta)$", ErrorMessage = "TicketType must be either 'ida' or 'vuelta'.")]
