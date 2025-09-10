@@ -11,5 +11,8 @@ namespace TicketService.Src.interfaces
     {
         public Task<ICollection<TicketDto?>> GetTickets();
         public Task<TicketDtoById?> GetTicketById(string id);
+        public Task<TicketDto?> CreateTicket(CreateTicketDto ticket);
+        public Task<TicketDto?> UpdateTicket(string id, UpdateTicketDto ticket);
+        public Task<bool> DeleteTicket(string id);
     }
 }

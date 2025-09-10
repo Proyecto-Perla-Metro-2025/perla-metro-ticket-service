@@ -13,49 +13,94 @@ namespace TicketService.Src.Repositories
 {
     public class TicketRepository : ITicketRepository
     {
-
         private readonly MongoDataContext _context;
 
         public TicketRepository(MongoDataContext context)
         {
             _context = context;
         }
-        public Task<TicketDtoById?> GetTicketById(string id)
+
+        public async Task<TicketDto?> CreateTicket(CreateTicketDto ticket)
         {
-            try
+            var newTicket = ticket.toModel();
+
+            var existingTicket = await _context.Tickets
+                .Find(t => t.PassengerId == newTicket.PassengerId && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (existingTicket != null)
             {
-                var ticket = _context.Tickets.FindAsync(t => t.Id == id).Result.FirstOrDefault();
-
-                if (ticket == null)
-                {
-                    throw new Exception("Ticket not found");
-                }
-
-                return Task.FromResult(ticket.toDtoById());
+                throw new InvalidOperationException("Passenger already has a ticket for this date.");
             }
-            catch (Exception ex)
+
+            await _context.Tickets.InsertOneAsync(newTicket);
+            return newTicket.ToDto();
+        }
+
+        public async Task<bool> DeleteTicket(string id)
+        {
+            var existingTicket = await _context.Tickets
+                .Find(t => t.Id == id && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (existingTicket == null)
             {
-                throw new Exception(ex.Message);
+                throw new KeyNotFoundException("Ticket not found.");
+            }
+            else
+            {
+                existingTicket.IsDeleted = true;
+                await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
+                return true;
             }
         }
 
-        public async Task<ICollection<TicketDto?>> GetTickets()
+        public async Task<TicketDtoById?> GetTicketById(string id)
         {
-            try
-            {
-                var tickets = _context.Tickets.FindAsync(ticket => true).Result.ToList();
-                
-                if (tickets == null || tickets.Count == 0)
-                {
-                    throw new Exception("No tickets found");
-                }
+            var ticket = await _context.Tickets
+                .Find(t => t.Id == id && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
 
-                return await Task.FromResult(tickets.Select(t => t.ToDto()).ToList());
-            }
-            catch (Exception ex)
+            return ticket?.toDtoById();
+        }
+
+        public async Task<ICollection<TicketDto?>> GetTickets() 
+        {
+            var tickets = await _context.Tickets
+                .Find(t => t.IsDeleted == false)
+                .ToListAsync();
+
+            return tickets.Select(t => t.ToDto()).ToList();
+        }
+
+        public async Task<TicketDto?> UpdateTicket(string id, UpdateTicketDto ticket)
+        {
+            var existingTicket = await _context.Tickets
+                .Find(t => t.Id == id && t.IsDeleted == false)
+                .FirstOrDefaultAsync();
+
+            if (existingTicket == null)
             {
-                throw new Exception(ex.Message);
+                throw new KeyNotFoundException("Ticket not found.");
             }
+            
+            if (!string.IsNullOrWhiteSpace(ticket.TicketType))
+            {
+                existingTicket.TicketType = ticket.TicketType;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus) && ticket.TicketStatus != "caducado")
+            {
+                existingTicket.TicketStatus = ticket.TicketStatus;
+            }
+
+            if (ticket.Amount.HasValue)
+            {
+                existingTicket.Amount = ticket.Amount.Value;
+            }
+            
+            await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
+            return existingTicket.ToDto();
         }
     }
 }

@@ -37,5 +37,19 @@ namespace TicketService.Src.Mappers
                 Amount = ticket.Amount
             };
         }
+
+        public static Ticket toModel(this CreateTicketDto createTicketDto)
+        {
+            if (createTicketDto == null) return null!;
+
+            return new Ticket
+            {
+                PassengerId = createTicketDto.PassengerId,
+                CreatedAt = createTicketDto.CreatedAt,
+                TicketType = createTicketDto.TicketType,
+                TicketStatus = createTicketDto.TicketStatus,
+                Amount = createTicketDto.Amount,
+            };
+        }   
     }
 }
