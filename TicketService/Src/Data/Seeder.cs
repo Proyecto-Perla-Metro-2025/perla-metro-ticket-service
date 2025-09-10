@@ -17,7 +17,7 @@ namespace TicketService.Src.Data
                     {
                         Id = Guid.NewGuid().ToString(),
                         PassengerId = $"passenger-{i}",
-                        CreatedAt = DateTime.UtcNow.AddHours(-4),
+                        CreatedAt = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")),
                         TicketType = Random.Shared.Next(0, 2) == 0 ? "ida" : "vuelta",
                         TicketStatus = "Active",
                         Amount = 2.50,

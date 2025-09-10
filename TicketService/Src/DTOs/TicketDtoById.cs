@@ -11,7 +11,8 @@ namespace TicketService.Src.DTOs
 
         public string PassengerId { get; set; } = null!;
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(-4);
+        public DateTimeOffset CreatedAt { get; set; } = TimeZoneInfo
+            .ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
 
         public string TicketType { get; set; } = null!;
 

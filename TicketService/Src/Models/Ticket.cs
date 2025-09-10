@@ -18,7 +18,8 @@ namespace TicketService.Src.Models
 
         [BsonElement("CreatedAt")]
         [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow.AddHours(-4);
+        public DateTimeOffset CreatedAt { get; set; } = TimeZoneInfo
+            .ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
 
         [BsonElement("TicketType")]
         [Required]

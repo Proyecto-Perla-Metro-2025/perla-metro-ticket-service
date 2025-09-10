@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TicketService.Src.DTOs;
 using TicketService.Src.interfaces;
+using TicketService.Src.Responses;
 
 namespace TicketService.Src.Controllers
 {
@@ -21,7 +22,8 @@ namespace TicketService.Src.Controllers
             try
             {
                 var tickets = await _ticketRepository.GetTickets();
-                return Ok(tickets);
+                var response = new ApiResponse<object>(tickets, "Tickets retrieved successfully", true);
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -43,7 +45,9 @@ namespace TicketService.Src.Controllers
                     return NotFound(new { message = "Ticket not found." });
                 }
 
-                return Ok(ticket);
+                var response = new ApiResponse<object>(ticket, "Ticket retrieved successfully", true);
+
+                return Ok(response);
             }
             catch (Exception)
             {
@@ -65,7 +69,9 @@ namespace TicketService.Src.Controllers
                     return BadRequest(new { message = "Failed to create ticket." });
                 }
 
-                return Ok(ticket);
+                var response = new ApiResponse<object>(ticket, "Ticket created successfully", true);
+
+                return Ok(response);
             }
             catch (InvalidOperationException ex)
             {
@@ -93,7 +99,9 @@ namespace TicketService.Src.Controllers
                     return NotFound(new { message = "Ticket not found." });
                 }
 
-                return Ok(updatedTicket);
+                var response = new ApiResponse<object>(updatedTicket, "Ticket updated successfully", true);
+
+                return Ok(response);
             }
             catch (KeyNotFoundException ex)
             {
@@ -112,14 +120,15 @@ namespace TicketService.Src.Controllers
 
             try
             {
-                var result = await _ticketRepository.DeleteTicket(id);
+                var ticket = await _ticketRepository.DeleteTicket(id);
 
-                if (!result)
+                if (!ticket)
                 {
                     return NotFound(new { message = "Ticket not found." });
                 }
 
-                return Ok(new { message = "Ticket deleted successfully." });
+                var response = new ApiResponse<object?>(null, "Ticket deleted successfully", true);
+                return Ok(response);
             }
             catch (KeyNotFoundException ex)
             {

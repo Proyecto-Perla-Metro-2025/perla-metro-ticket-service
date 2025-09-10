@@ -45,7 +45,6 @@ namespace TicketService.Src.Mappers
             return new Ticket
             {
                 PassengerId = createTicketDto.PassengerId,
-                CreatedAt = createTicketDto.CreatedAt,
                 TicketType = createTicketDto.TicketType,
                 TicketStatus = createTicketDto.TicketStatus,
                 Amount = createTicketDto.Amount,
