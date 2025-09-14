@@ -23,12 +23,12 @@ namespace TicketService.Src.Models
 
         [BsonElement("TicketType")]
         [Required]
-        [RegularExpression("^(ida|vuelta)$", ErrorMessage = "TicketType must be either 'ida' or 'vuelta'.")]
+        [RegularExpression("^(ida|Ida|vuelta|Vuelta)$", ErrorMessage = "TicketType must be either 'ida' or 'vuelta'.")]
         public string TicketType { get; set; } = null!;
 
         [BsonElement("TicketStatus")]
         [Required]
-        [RegularExpression("^(activo|usado|caducado)$", ErrorMessage = "TicketStatus must be either 'activo', 'usado', or 'caducado'.")]
+        [RegularExpression("^(activo|Activo|usado|Usado|caducado|Caducado)$", ErrorMessage = "TicketStatus must be either 'activo', 'usado', or 'caducado'.")]
         public string TicketStatus { get; set; } = null!;
 
         [BsonElement("Amount")]

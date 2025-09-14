@@ -7,13 +7,17 @@ namespace TicketService.Src.Data
     public class MongoDataContext
     {
         private readonly IMongoDatabase _database;
+        private readonly DatabaseSettings _dbSettings;
 
         public MongoDataContext(IOptions<DatabaseSettings> dbSettings)
         {
-            var mongoClient = new MongoClient(dbSettings.Value.ConnectionString);
-            _database = mongoClient.GetDatabase(dbSettings.Value.DatabaseName);
+            _dbSettings = dbSettings.Value;
+            
+            var mongoClient = new MongoClient(_dbSettings.ConnectionString);
+            _database = mongoClient.GetDatabase(_dbSettings.DatabaseName);
         }
 
-        public IMongoCollection<Ticket> Tickets => _database.GetCollection<Ticket>("Tickets");
+        public IMongoCollection<Ticket> Tickets => 
+            _database.GetCollection<Ticket>(_dbSettings.TicketsCollectionName);
     }
 }

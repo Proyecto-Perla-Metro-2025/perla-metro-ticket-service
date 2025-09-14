@@ -45,10 +45,40 @@ namespace TicketService.Src.Mappers
             return new Ticket
             {
                 PassengerId = createTicketDto.PassengerId,
-                TicketType = createTicketDto.TicketType,
-                TicketStatus = createTicketDto.TicketStatus,
+                TicketType = createTicketDto.TicketType.NormalizeTicketValue(),
+                TicketStatus = createTicketDto.TicketStatus.NormalizeTicketValue(),
                 Amount = createTicketDto.Amount,
             };
-        }   
+        }
+
+        public static void UpdateFromDto(this Ticket existingTicket, UpdateTicketDto updateDto)
+        {
+            if (updateDto == null) return;
+
+            if (!string.IsNullOrWhiteSpace(updateDto.TicketType))
+            {
+                existingTicket.TicketType = updateDto.TicketType.NormalizeTicketValue();
+            }
+
+            if (!string.IsNullOrWhiteSpace(updateDto.TicketStatus))
+            {
+                existingTicket.TicketStatus = updateDto.TicketStatus.NormalizeTicketValue();
+            }
+
+            if (updateDto.Amount.HasValue)
+            {
+                existingTicket.Amount = updateDto.Amount.Value;
+            }
+        }
+
+        public static string NormalizeTicketValue(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? value : value.Trim().ToLowerInvariant();
+        }
+
+        public static string TrimOnly(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? value : value.Trim();
+        }
     }
 }

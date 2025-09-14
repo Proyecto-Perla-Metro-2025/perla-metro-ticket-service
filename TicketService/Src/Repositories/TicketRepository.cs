@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using MongoDB.Driver;
 using TicketService.Src.Data;
 using TicketService.Src.DTOs;
 using TicketService.Src.interfaces;
 using TicketService.Src.Mappers;
-using TicketService.Src.Models;
+
 
 namespace TicketService.Src.Repositories
 {
@@ -83,21 +79,17 @@ namespace TicketService.Src.Repositories
             {
                 throw new KeyNotFoundException("Ticket not found.");
             }
-            
-            if (!string.IsNullOrWhiteSpace(ticket.TicketType))
+
+            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus))
             {
-                existingTicket.TicketType = ticket.TicketType;
+                var normalizedStatus = ticket.TicketStatus.NormalizeTicketValue();
+                if (existingTicket.TicketStatus == "caducado" && normalizedStatus == "activo")
+                {
+                    throw new InvalidOperationException("Cannot reactivate an expired ticket.");
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus) && ticket.TicketStatus != "caducado")
-            {
-                existingTicket.TicketStatus = ticket.TicketStatus;
-            }
-
-            if (ticket.Amount.HasValue)
-            {
-                existingTicket.Amount = ticket.Amount.Value;
-            }
+            existingTicket.UpdateFromDto(ticket);
             
             await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
             return existingTicket.ToDto();

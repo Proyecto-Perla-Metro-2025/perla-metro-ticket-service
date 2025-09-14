@@ -19,7 +19,7 @@ namespace TicketService.Src.Data
                         PassengerId = $"passenger-{i}",
                         CreatedAt = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")),
                         TicketType = Random.Shared.Next(0, 2) == 0 ? "ida" : "vuelta",
-                        TicketStatus = "Active",
+                        TicketStatus = Random.Shared.Next(0, 3) == 0 ? "activo" : (Random.Shared.Next(0, 2) == 0 ? "usado" : "caducado"),
                         Amount = 2.50,
                         IsDeleted = false
                     });

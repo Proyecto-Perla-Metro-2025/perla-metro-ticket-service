@@ -1,11 +1,18 @@
+using DotNetEnv;
 using TicketService.Src.Data;
 using TicketService.Src.interfaces;
 using TicketService.Src.Repositories;
 
+Env.Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<DatabaseSettings>(
-    builder.Configuration.GetSection("DatabaseSettings"));
+builder.Services.Configure<DatabaseSettings>(options =>
+{
+    options.ConnectionString = GetRequiredEnvVar("MONGO_CONNECTION_STRING");
+    options.DatabaseName = GetRequiredEnvVar("MONGO_DATABASE_NAME");
+    options.TicketsCollectionName = Environment.GetEnvironmentVariable("TICKETS_COLLECTION_NAME") ?? "tickets";
+});
 
 builder.Services.AddScoped<MongoDataContext>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
@@ -17,6 +24,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+static string GetRequiredEnvVar(string name)
+{
+    return Environment.GetEnvironmentVariable(name) 
+           ?? throw new InvalidOperationException($"Environment variable '{name}' is required");
+}
 
 using (var scope = app.Services.CreateScope())
 {

@@ -17,12 +17,12 @@ namespace TicketService.Src.DTOs
 
         [BsonElement("TicketType")]
         [Required]
-        [RegularExpression("^(ida|vuelta)$", ErrorMessage = "TicketType must be either 'ida' or 'vuelta'.")]
+        [RegularExpression("^(?i)(ida|vuelta)$", ErrorMessage = "TicketType must be either 'ida' or 'vuelta'.")]
         public string TicketType { get; set; } = null!;
 
         [BsonElement("TicketStatus")]
         [Required]
-        [RegularExpression("^(activo|usado|caducado)$", ErrorMessage = "TicketStatus must be either 'activo', 'usado', or 'caducado'.")]
+        [RegularExpression("^(?i)(activo|usado|caducado)$", ErrorMessage = "TicketStatus must be either 'activo', 'usado', or 'caducado'.")]
         public string TicketStatus { get; set; } = null!;
 
         [BsonElement("Amount")]

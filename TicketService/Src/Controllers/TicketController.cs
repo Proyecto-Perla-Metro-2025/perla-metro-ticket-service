@@ -103,9 +103,9 @@ namespace TicketService.Src.Controllers
 
                 return Ok(response);
             }
-            catch (KeyNotFoundException ex)
+            catch (InvalidOperationException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception)
             {
@@ -130,9 +130,9 @@ namespace TicketService.Src.Controllers
                 var response = new ApiResponse<object?>(null, "Ticket deleted successfully", true);
                 return Ok(response);
             }
-            catch (KeyNotFoundException ex)
+            catch (InvalidOperationException ex)
             {
-                return NotFound(new { message = ex.Message });
+                return BadRequest(new { message = ex.Message });
             }
             catch (Exception)
             {
