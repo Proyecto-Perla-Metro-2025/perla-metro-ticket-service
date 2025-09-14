@@ -24,7 +24,10 @@ namespace TicketService.Src.Repositories
                 .Find(t => t.PassengerId == newTicket.PassengerId && t.IsDeleted == false)
                 .FirstOrDefaultAsync();
 
-            if (existingTicket != null)
+            if (newTicket.CreatedAt.Date == TimeZoneInfo.ConvertTime(DateTimeOffset
+                                                .UtcNow, TimeZoneInfo
+                                                .FindSystemTimeZoneById("Pacific SA Standard Time"))
+                                                .Date && existingTicket != null)
             {
                 throw new InvalidOperationException("Passenger already has a ticket for this date.");
             }
