@@ -21,7 +21,7 @@ namespace TicketService.Src.Data
                         TicketType = Random.Shared.Next(0, 2) == 0 ? "ida" : "vuelta",
                         TicketStatus = Random.Shared.Next(0, 3) == 0 ? "activo" : (Random.Shared.Next(0, 2) == 0 ? "usado" : "caducado"),
                         Amount = 2.50,
-                        IsDeleted = false
+                        DeletedAt = null
                     });
                 }
             }

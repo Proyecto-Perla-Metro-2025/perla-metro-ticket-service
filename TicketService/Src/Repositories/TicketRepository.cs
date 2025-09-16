@@ -21,7 +21,7 @@ namespace TicketService.Src.Repositories
             var newTicket = ticket.toModel();
 
             var existingTicket = await _context.Tickets
-                .Find(t => t.PassengerId == newTicket.PassengerId && t.IsDeleted == false)
+                .Find(t => t.PassengerId == newTicket.PassengerId && t.DeletedAt == null)
                 .FirstOrDefaultAsync();
 
             if (newTicket.CreatedAt.Date == TimeZoneInfo.ConvertTime(DateTimeOffset
@@ -39,7 +39,7 @@ namespace TicketService.Src.Repositories
         public async Task<bool> DeleteTicket(string id)
         {
             var existingTicket = await _context.Tickets
-                .Find(t => t.Id == id && t.IsDeleted == false)
+                .Find(t => t.Id == id && t.DeletedAt == null)
                 .FirstOrDefaultAsync();
 
             if (existingTicket == null)
@@ -48,7 +48,8 @@ namespace TicketService.Src.Repositories
             }
             else
             {
-                existingTicket.IsDeleted = true;
+
+                existingTicket.DeletedAt = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")).DateTime;
                 await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
                 return true;
             }
@@ -57,7 +58,7 @@ namespace TicketService.Src.Repositories
         public async Task<TicketDtoById?> GetTicketById(string id)
         {
             var ticket = await _context.Tickets
-                .Find(t => t.Id == id && t.IsDeleted == false)
+                .Find(t => t.Id == id && t.DeletedAt == null)
                 .FirstOrDefaultAsync();
 
             return ticket?.toDtoById();
@@ -66,7 +67,7 @@ namespace TicketService.Src.Repositories
         public async Task<ICollection<TicketDto?>> GetTickets() 
         {
             var tickets = await _context.Tickets
-                .Find(t => t.IsDeleted == false)
+                .Find(t => t.DeletedAt == null)
                 .ToListAsync();
 
             return tickets.Select(t => t.ToDto()).ToList();
@@ -75,7 +76,7 @@ namespace TicketService.Src.Repositories
         public async Task<TicketDto?> UpdateTicket(string id, UpdateTicketDto ticket)
         {
             var existingTicket = await _context.Tickets
-                .Find(t => t.Id == id && t.IsDeleted == false)
+                .Find(t => t.Id == id && t.DeletedAt == null)
                 .FirstOrDefaultAsync();
 
             if (existingTicket == null)

@@ -77,10 +77,6 @@ namespace TicketService.Src.Controllers
             {
                 return BadRequest(new { message = ex.Message });
             }
-            catch (Exception)
-            {
-                return StatusCode(500, new { message = "An error occurred while creating the ticket." });
-            }
         }
 
         [HttpPut("{id}")]
@@ -103,13 +99,9 @@ namespace TicketService.Src.Controllers
 
                 return Ok(response);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { message = "An error occurred while updating the ticket." });
             }
         }
 
@@ -130,13 +122,9 @@ namespace TicketService.Src.Controllers
                 var response = new ApiResponse<object?>(null, "Ticket deleted successfully", true);
                 return Ok(response);
             }
-            catch (InvalidOperationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, new { message = "An error occurred while deleting the ticket." });
             }
         }
     }

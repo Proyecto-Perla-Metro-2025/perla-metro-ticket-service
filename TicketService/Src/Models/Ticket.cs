@@ -36,8 +36,17 @@ namespace TicketService.Src.Models
         [Range(0.0, double.MaxValue, ErrorMessage = "Amount must be a non-negative value.")]
         public double Amount { get; set; } = 0.0;
 
-        [BsonElement("IsDeleted")]
-        [Required]
-        public bool IsDeleted { get; set; } = false;
+        [BsonElement("DeletedAt")]
+        public DateTime? DeletedAt { get; set; } = null;
+
+        [BsonIgnore]
+        public bool IsDeleted => DeletedAt.HasValue;
+
+        [BsonIgnore]
+        public bool IsActive => !IsDeleted;
+
+        // Métodos helper
+        public void SoftDelete() => DeletedAt = DateTime.UtcNow;
+        public void Restore() => DeletedAt = null;
     }
 }
