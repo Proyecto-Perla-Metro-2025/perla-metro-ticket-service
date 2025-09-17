@@ -45,7 +45,8 @@ namespace TicketService.Src.Models
         [BsonIgnore]
         public bool IsActive => !IsDeleted;
 
-        public void SoftDelete() => DeletedAt = DateTime.UtcNow;
+        public void SoftDelete() => DeletedAt = TimeZoneInfo
+            .ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")).DateTime;
 
     }
 }
