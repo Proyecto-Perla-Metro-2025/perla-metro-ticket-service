@@ -9,10 +9,15 @@ WORKDIR /src
 
 # Copia los archivos del proyecto y restaura dependencias
 COPY ["TicketService.csproj", "./"]
-RUN dotnet restore "./TicketService.csproj"
+RUN dotnet restore "TicketService.csproj"
 
-# Copia todo el código y publica en Release
+# Copia todo el código
 COPY . .
+
+# Instala certificados SSL para MongoDB Atlas
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+# Publica la app en Release
 RUN dotnet publish "TicketService.csproj" -c Release -o /app/publish
 
 # Imagen final liviana para ejecutar
