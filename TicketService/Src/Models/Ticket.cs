@@ -45,8 +45,7 @@ namespace TicketService.Src.Models
         [BsonIgnore]
         public bool IsActive => !IsDeleted;
 
-        // Métodos helper
         public void SoftDelete() => DeletedAt = DateTime.UtcNow;
-        public void Restore() => DeletedAt = null;
+
     }
 }

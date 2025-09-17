@@ -49,7 +49,7 @@ namespace TicketService.Src.Repositories
             else
             {
 
-                existingTicket.DeletedAt = TimeZoneInfo.ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time")).DateTime;
+                existingTicket.SoftDelete();
                 await _context.Tickets.ReplaceOneAsync(t => t.Id == id, existingTicket);
                 return true;
             }
