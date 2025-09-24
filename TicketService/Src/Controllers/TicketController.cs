@@ -5,17 +5,29 @@ using TicketService.Src.Responses;
 
 namespace TicketService.Src.Controllers
 {
+    /// <summary>
+    /// Controlador para la gestión de tickets.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class TicketController : ControllerBase
     {
+        // Repositorio de tickets.
         private readonly ITicketRepository _ticketRepository;
 
+        /// <summary>
+        /// Constructor que inicializa el controlador con el repositorio de tickets.
+        /// </summary>
+        /// <param name="ticketRepository">Repositorio de tickets.</param>
         public TicketController(ITicketRepository ticketRepository)
         {
             _ticketRepository = ticketRepository;
         }
 
+        /// <summary>
+        /// Obtiene todos los tickets.
+        /// </summary>
+        /// <returns>Retorna una lista de tickets.</returns>
         [HttpGet]
         public async Task<IActionResult> GetTickets()
         {
@@ -31,6 +43,11 @@ namespace TicketService.Src.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene un ticket por su ID.
+        /// </summary>
+        /// <param name="id">ID del ticket.</param>
+        /// <returns>Retorna el ticket correspondiente o un mensaje de error.</returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTicketById(string id)
         {
@@ -55,6 +72,11 @@ namespace TicketService.Src.Controllers
             }
         }
 
+        /// <summary>
+        /// Crea un nuevo ticket.
+        /// </summary>
+        /// <param name="createTicketDto">Datos del ticket a crear.</param>
+        /// <returns>Retorna el ticket creado o un mensaje de error.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateTicket([FromBody] CreateTicketDto createTicketDto)
         {
@@ -79,6 +101,12 @@ namespace TicketService.Src.Controllers
             }
         }
 
+        /// <summary>
+        /// Actualiza un ticket existente.
+        /// </summary>
+        /// <param name="id">ID del ticket a actualizar.</param>
+        /// <param name="updateTicketDto">Datos del ticket a actualizar.</param>
+        /// <returns>Retorna el ticket actualizado o un mensaje de error.</returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTicket(string id, [FromBody] UpdateTicketDto updateTicketDto)
         {
@@ -105,6 +133,11 @@ namespace TicketService.Src.Controllers
             }
         }
 
+        /// <summary>
+        /// Elimina un ticket por su ID.
+        /// </summary>
+        /// <param name="id">ID del ticket a eliminar.</param>
+        /// <returns>Retorna un mensaje de éxito o un mensaje de error.</returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(string id)
         {

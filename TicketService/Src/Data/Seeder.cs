@@ -3,8 +3,15 @@ using TicketService.Src.Models;
 
 namespace TicketService.Src.Data
 {
+    /// <summary>
+    /// Clase para inicializar datos de ejemplo en la base de datos.
+    /// </summary>
     public class Seeder
     {
+        /// <summary>
+        /// Método para sembrar datos de ejemplo en la base de datos si la colección está vacía.
+        /// </summary>
+        /// <param name="context">Parámetros de contexto de la base de datos.</param>
         public static void Seed(MongoDataContext context)
         {
             var collection = context.Tickets;

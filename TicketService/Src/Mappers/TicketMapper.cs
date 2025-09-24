@@ -7,8 +7,16 @@ using TicketService.Src.Models;
 
 namespace TicketService.Src.Mappers
 {
+    /// <summary>
+    /// Clase estática que proporciona métodos de extensión para mapear entre modelos y DTOs de tickets.
+    /// </summary>
     public static class TicketMapper
     {
+        /// <summary>
+        /// Mapea un modelo de Ticket a un DTO de Ticket.
+        /// </summary>
+        /// <param name="ticket">El modelo de Ticket.</param>
+        /// <returns>El DTO de Ticket.</returns>
         public static TicketDto? ToDto(this Ticket? ticket)
         {
             if (ticket == null) return null;
@@ -24,7 +32,12 @@ namespace TicketService.Src.Mappers
             };
         }
 
-        public static TicketDtoById? toDtoById(this Ticket? ticket)
+        /// <summary>
+        /// Mapea un modelo de Ticket a un DTO de Ticket por ID.
+        /// </summary>
+        /// <param name="ticket">El modelo de Ticket.</param>
+        /// <returns>El DTO de Ticket por ID.</returns>
+        public static TicketDtoById? ToDtoById(this Ticket? ticket)
         {
             if (ticket == null) return null;
 
@@ -38,6 +51,11 @@ namespace TicketService.Src.Mappers
             };
         }
 
+        /// <summary>
+        /// Mapea un DTO de creación de Ticket a un modelo de Ticket.
+        /// </summary>
+        /// <param name="createTicketDto">El DTO de creación de Ticket.</param>
+        /// <returns>El modelo de Ticket.</returns>
         public static Ticket toModel(this CreateTicketDto createTicketDto)
         {
             if (createTicketDto == null) return null!;
@@ -51,6 +69,11 @@ namespace TicketService.Src.Mappers
             };
         }
 
+        /// <summary>
+        /// Actualiza un modelo de Ticket existente con los valores de un DTO de actualización de Ticket.
+        /// </summary>
+        /// <param name="existingTicket">El modelo de Ticket existente.</param>
+        /// <param name="updateDto">El DTO de actualización de Ticket.</param>
         public static void UpdateFromDto(this Ticket existingTicket, UpdateTicketDto updateDto)
         {
             if (updateDto == null) return;
@@ -71,11 +94,21 @@ namespace TicketService.Src.Mappers
             }
         }
 
+        /// <summary>
+        /// Normaliza un valor de ticket a minúsculas y sin espacios en blanco al inicio o al final.
+        /// </summary>
+        /// <param name="value">El valor de ticket a normalizar.</param>
+        /// <returns>El valor de ticket normalizado.</returns>
         public static string NormalizeTicketValue(this string value)
         {
             return string.IsNullOrWhiteSpace(value) ? value : value.Trim().ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Elimina los espacios en blanco al inicio y al final de una cadena.
+        /// </summary>
+        /// <param name="value">La cadena de texto a procesar.</param>
+        /// <returns>La cadena de texto sin espacios en blanco al inicio y al final.</returns>
         public static string TrimOnly(this string value)
         {
             return string.IsNullOrWhiteSpace(value) ? value : value.Trim();
