@@ -7,15 +7,14 @@ namespace TicketService.Src.DTOs
 {
     public class TicketDtoById
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Id { get; set; } = "";
 
-        public string PassengerId { get; set; } = null!;
+        public string PassengerId { get; set; } = "";
 
-        public DateTimeOffset CreatedAt { get; set; } = TimeZoneInfo
-            .ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public string TicketType { get; set; } = null!;
+        public string TicketType { get; set; } = "";
 
-        public double Amount { get; set; } = 0.0;
+        public double Amount { get; set; }
     }
 }
