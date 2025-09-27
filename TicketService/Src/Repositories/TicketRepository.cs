@@ -120,14 +120,8 @@ namespace TicketService.Src.Repositories
                 throw new KeyNotFoundException("Ticket not found.");
             }
 
-            if (!string.IsNullOrWhiteSpace(ticket.TicketStatus))
-            {
-                var normalizedStatus = ticket.TicketStatus.NormalizeTicketValue();
-                if (existingTicket.TicketStatus == "caducado" && normalizedStatus == "activo")
-                {
-                    throw new InvalidOperationException("Cannot reactivate an expired ticket.");
-                }
-            }
+            existingTicket.CreatedAt = TimeZoneInfo
+                .ConvertTime(DateTimeOffset.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Pacific SA Standard Time"));
 
             existingTicket.UpdateFromDto(ticket);
 

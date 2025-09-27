@@ -83,15 +83,16 @@ namespace TicketService.Src.Mappers
                 existingTicket.TicketType = updateDto.TicketType.NormalizeTicketValue();
             }
 
-            if (!string.IsNullOrWhiteSpace(updateDto.TicketStatus))
+            if (!string.IsNullOrWhiteSpace(updateDto.PassengerId))
             {
-                existingTicket.TicketStatus = updateDto.TicketStatus.NormalizeTicketValue();
+                existingTicket.PassengerId = updateDto.PassengerId.TrimOnly();
             }
 
             if (updateDto.Amount.HasValue)
             {
                 existingTicket.Amount = updateDto.Amount.Value;
             }
+
         }
 
         /// <summary>
