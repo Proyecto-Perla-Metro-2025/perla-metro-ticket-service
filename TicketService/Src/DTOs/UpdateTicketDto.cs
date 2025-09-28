@@ -10,7 +10,6 @@ namespace TicketService.Src.DTOs
 {
     public class UpdateTicketDto
     {
-        [Required]
         public string? PassengerId { get; set; } = null;
         
         [RegularExpression("^(?i)(ida|vuelta)$", ErrorMessage = "TicketType must be either 'ida' or 'vuelta'.")]
